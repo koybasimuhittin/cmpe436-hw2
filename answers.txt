@@ -36,30 +36,30 @@ Q1.V.P3.4 = 4,0,5
 Q1.V.P3.5 = 4,0,6
 
 # Q1(c) direct-dependency clock of every state
-Q1.D.P1.0 = 
-Q1.D.P1.1 = 
-Q1.D.P1.2 = 
-Q1.D.P1.3 = 
-Q1.D.P1.4 = 
-Q1.D.P2.0 = 
-Q1.D.P2.1 = 
-Q1.D.P2.2 = 
-Q1.D.P2.3 = 
-Q1.D.P3.0 = 
-Q1.D.P3.1 = 
-Q1.D.P3.2 = 
-Q1.D.P3.3 = 
-Q1.D.P3.4 = 
-Q1.D.P3.5 = 
+Q1.D.P1.0 = 1,0,0
+Q1.D.P1.1 = 2,0,1
+Q1.D.P1.2 = 3,0,1
+Q1.D.P1.3 = 4,0,3
+Q1.D.P1.4 = 5,0,3
+Q1.D.P2.0 = 0,1,0
+Q1.D.P2.1 = 0,2,0
+Q1.D.P2.2 = 2,3,0
+Q1.D.P2.3 = 2,4,0
+Q1.D.P3.0 = 0,0,1
+Q1.D.P3.1 = 0,0,2
+Q1.D.P3.2 = 0,0,3
+Q1.D.P3.3 = 0,0,4
+Q1.D.P3.4 = 4,0,5
+Q1.D.P3.5 = 4,0,6
 
 # Q1(d) relation for each pair in q1.queries: ->  <-  or  ||
-Q1.rel.1 = 
-Q1.rel.2 = 
-Q1.rel.3 = 
-Q1.rel.4 = 
-Q1.rel.5 = 
+Q1.rel.1 = ||
+Q1.rel.2 = ||
+Q1.rel.3 = <-
+Q1.rel.4 = ||
+Q1.rel.5 = ->
 
 # Q1(e) two states u t with L(u) < L(t) but u || t
-Q1.lamport_not_hb = 
+Q1.lamport_not_hb = P2.3 P3.5
 # Q1(f) two states s t on different processes with s -> t but NOT s ->d t
-Q1.hb_not_direct = 
+Q1.hb_not_direct = P3.0 P2.2

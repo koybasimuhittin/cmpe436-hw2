@@ -22,3 +22,9 @@ Q1 checks if I can run the three slide algorithms by hand on my trace and use th
 **Ideas I dropped:**
 - Doing (d) only by following arrows on the diagram: it is easy to start from the wrong side of a send, comparing vectors is mechanical.
 - Labeling events like the textbook version (the send increments first and the message carries the new value). It does not match the handout table (the slide 23 example would give P3.1 = 5, not 3).
+
+**Notes while doing Q1:**
+- D and V only differ at P2.2 and P2.3 (D has 0 for P3): P2 hears about P3.0 only through P1, which forwards only its own entry. So (f) = P3.0 P2.2.
+- rel.2 (P1.2 vs P2.2) is `||`, because m2 leaves from P1.1, not P1.2.
+- (e) = P2.3 P3.5 (L=4 < 6), nothing on P2 can be before P3.5.
+- The own entry of D is always equal to L. Good check for my numbers.
