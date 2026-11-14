@@ -15,6 +15,10 @@ Q1 checks if I can run the three slide algorithms by hand on my trace and use th
 3. (d): s -> t iff V(s) < V(t). (e): L smaller but vectors not comparable. (f): look where D and V differ.
 4. Check again later with P1.
 
+**My space-time diagram** (vector clock written under each state):
+
+![space-time diagram of my q1.trace](diagram.jpg)
+
 **Ideas I dropped:**
 - Doing (d) only by following arrows on the diagram: it is easy to start from the wrong side of a send, comparing vectors is mechanical.
 - Labeling events like the textbook version (the send increments first and the message carries the new value). It does not match the handout table (the slide 23 example would give P3.1 = 5, not 3).
