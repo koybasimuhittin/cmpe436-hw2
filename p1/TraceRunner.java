@@ -2,6 +2,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,11 +12,13 @@ public class TraceRunner {
     static class Msg {
         int sender;
         int l;
+        int[] v;
     }
 
     static class State {
         int p, k;
         int l;
+        int[] v;
 
         String name() {
             return "P" + p + "." + k;
@@ -24,6 +27,7 @@ public class TraceRunner {
 
     static int n;
     static LamportClock[] lc;
+    static VectorClock[] vc;
     static List<List<State>> states = new ArrayList<>();
 
     public static void main(String[] args) throws IOException {
@@ -55,8 +59,10 @@ public class TraceRunner {
             if (w[0].equals("processes")) {
                 n = Integer.parseInt(w[1]);
                 lc = new LamportClock[n];
+                vc = new VectorClock[n];
                 for (int i = 0; i < n; i++) {
                     lc[i] = new LamportClock();
+                    vc[i] = new VectorClock(n, i);
                     states.add(new ArrayList<>());
                     save(i);
                 }
@@ -66,15 +72,19 @@ public class TraceRunner {
             int i = Integer.parseInt(w[0]) - 1;
             if (w[1].equals("internal")) {
                 lc[i].tick();
+                vc[i].tick();
             } else if (w[1].equals("send")) {
                 Msg msg = new Msg();
                 msg.sender = i;
                 msg.l = lc[i].c;
+                msg.v = vc[i].v.clone();
                 inTransit.put(w[2], msg);
                 lc[i].sendAction();
+                vc[i].sendAction();
             } else if (w[1].equals("receive")) {
                 Msg msg = inTransit.remove(w[2]);
                 lc[i].receiveAction(msg.sender, msg.l);
+                vc[i].receiveAction(msg.v);
             } else {
                 System.err.println("unknown line: " + line);
                 continue;
@@ -88,12 +98,17 @@ public class TraceRunner {
         s.p = i + 1;
         s.k = states.get(i).size();
         s.l = lc[i].c;
+        s.v = vc[i].v.clone();
         states.get(i).add(s);
     }
 
     static void printStates() {
         for (List<State> list : states)
             for (State s : list)
-                System.out.println(s.name() + " L=" + s.l);
+                System.out.println(s.name() + " L=" + s.l + " V=" + vec(s.v));
+    }
+
+    static String vec(int[] a) {
+        return Arrays.toString(a).replace(" ", "");
     }
 }
