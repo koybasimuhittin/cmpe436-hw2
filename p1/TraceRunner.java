@@ -67,11 +67,11 @@ public class TraceRunner {
             if (w[1].equals("internal")) {
                 lc[i].tick();
             } else if (w[1].equals("send")) {
-                lc[i].sendAction();
                 Msg msg = new Msg();
                 msg.sender = i;
                 msg.l = lc[i].c;
                 inTransit.put(w[2], msg);
+                lc[i].sendAction();
             } else if (w[1].equals("receive")) {
                 Msg msg = inTransit.remove(w[2]);
                 lc[i].receiveAction(msg.sender, msg.l);
