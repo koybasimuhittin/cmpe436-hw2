@@ -14,6 +14,7 @@ public class TraceRunner {
         int l;
         int[] v;
         int d;
+        int[][] m;
     }
 
     static class State {
@@ -21,6 +22,7 @@ public class TraceRunner {
         int l;
         int[] v;
         int[] d;
+        int[][] m;
 
         String name() {
             return "P" + p + "." + k;
@@ -31,6 +33,7 @@ public class TraceRunner {
     static LamportClock[] lc;
     static VectorClock[] vc;
     static DirectClock[] dc;
+    static MatrixClock[] mc;
     static List<List<State>> states = new ArrayList<>();
 
     public static void main(String[] args) throws IOException {
@@ -64,10 +67,12 @@ public class TraceRunner {
                 lc = new LamportClock[n];
                 vc = new VectorClock[n];
                 dc = new DirectClock[n];
+                mc = new MatrixClock[n];
                 for (int i = 0; i < n; i++) {
                     lc[i] = new LamportClock();
                     vc[i] = new VectorClock(n, i);
                     dc[i] = new DirectClock(n, i);
+                    mc[i] = new MatrixClock(n, i);
                     states.add(new ArrayList<>());
                     save(i);
                 }
@@ -79,21 +84,25 @@ public class TraceRunner {
                 lc[i].tick();
                 vc[i].tick();
                 dc[i].tick();
+                mc[i].tick();
             } else if (w[1].equals("send")) {
                 Msg msg = new Msg();
                 msg.sender = i;
                 msg.l = lc[i].c;
                 msg.v = vc[i].v.clone();
                 msg.d = dc[i].clock[i];
+                msg.m = copy(mc[i].M);
                 inTransit.put(w[2], msg);
                 lc[i].sendAction();
                 vc[i].sendAction();
                 dc[i].sendAction();
+                mc[i].sendAction();
             } else if (w[1].equals("receive")) {
                 Msg msg = inTransit.remove(w[2]);
                 lc[i].receiveAction(msg.sender, msg.l);
                 vc[i].receiveAction(msg.v);
                 dc[i].receiveAction(msg.sender, msg.d);
+                mc[i].receiveAction(msg.m, msg.sender);
             } else {
                 System.err.println("unknown line: " + line);
                 continue;
@@ -109,13 +118,22 @@ public class TraceRunner {
         s.l = lc[i].c;
         s.v = vc[i].v.clone();
         s.d = dc[i].clock.clone();
+        s.m = copy(mc[i].M);
         states.get(i).add(s);
     }
 
     static void printStates() {
         for (List<State> list : states)
             for (State s : list)
-                System.out.println(s.name() + " L=" + s.l + " V=" + vec(s.v) + " D=" + vec(s.d));
+                System.out.println(s.name() + " L=" + s.l + " V=" + vec(s.v) + " D=" + vec(s.d)
+                        + " M=" + Arrays.deepToString(s.m).replace(" ", ""));
+    }
+
+    static int[][] copy(int[][] a) {
+        int[][] b = new int[a.length][];
+        for (int i = 0; i < a.length; i++)
+            b[i] = a[i].clone();
+        return b;
     }
 
     static String vec(int[] a) {
