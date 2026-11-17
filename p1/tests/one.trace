@@ -1,0 +1,3 @@
+processes 1
+1 internal
+1 send x

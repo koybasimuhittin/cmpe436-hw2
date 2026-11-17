@@ -1,0 +1,11 @@
+# edge cases: message never received (m2), process 4 has no events,
+# comments and an empty line
+processes 4
+1 send m1      # sent from P1.0
+2 send m2      # nobody receives m2
+
+2 receive m1
+3 internal
+2 send m3
+3 receive m3
+1 internal
