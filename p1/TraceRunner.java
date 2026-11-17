@@ -43,6 +43,11 @@ public class TraceRunner {
         }
         runTrace(readLines(args[0]));
         printStates();
+        for (String q : readLines(args[1])) {
+            String ans = answer(q.split("\\s+"));
+            if (ans != null)
+                System.out.println(ans);
+        }
     }
 
     static List<String> readLines(String file) throws IOException {
@@ -127,6 +132,35 @@ public class TraceRunner {
             for (State s : list)
                 System.out.println(s.name() + " L=" + s.l + " V=" + vec(s.v) + " D=" + vec(s.d)
                         + " M=" + Arrays.deepToString(s.m).replace(" ", ""));
+    }
+
+    static String answer(String[] q) {
+        if (q[0].equals("rel"))
+            return rel(find(q[1]), find(q[2]));
+        System.err.println("query not supported: " + String.join(" ", q));
+        return null;
+    }
+
+    static State find(String name) {
+        String[] pk = name.substring(1).split("\\.");
+        return states.get(Integer.parseInt(pk[0]) - 1).get(Integer.parseInt(pk[1]));
+    }
+
+    static String rel(State a, State b) {
+        if (a == b)
+            return "==";
+        if (lessEq(a.v, b.v))
+            return "->";
+        if (lessEq(b.v, a.v))
+            return "<-";
+        return "||";
+    }
+
+    static boolean lessEq(int[] x, int[] y) {
+        for (int i = 0; i < x.length; i++)
+            if (x[i] > y[i])
+                return false;
+        return true;
     }
 
     static int[][] copy(int[][] a) {
