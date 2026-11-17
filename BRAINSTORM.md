@@ -54,3 +54,12 @@ The program simulates the trace: every process has one object of each slide clas
 
 **Bug I expect to be hardest:** reading the clock after sendAction(). Test: sample1 P3.1 must be L=3 V=[2,1,2] (with the bug L=5), and P2.2 in my trace must be L=3.
 Second risk: Java arrays are references, so the message needs its own copy. Test: sample2 P1.4 row 2 must be [1,3,0].
+
+## After P1: program vs my hand answers
+
+I ran P1 on my q1.trace (`p1/tests/q1.queries`) and compared with answers.txt.
+
+- **First run (only Lamport):** 8 values were too big: P1.1-P1.4, P2.2, P2.3, P3.4, P3.5 (e.g. P1.1 3, hand 2). sample1 P3.1 was 5 instead of 3. **I was right**: the program called `sendAction()` before copying `c` into the message, the bug I expected. Moving the copy first fixed all 8.
+- **After the fix:** all L, V and D values and the 5 rel answers match my hand answers. The program also confirms (e) and (f).
+- The chatbot said P3.4 = 6 (AI_LOG #4). Program and hand both give 5, because m4 leaves from P1.3 (L=4).
+- `p1/tests/` also has a never-received message, a process with no events, comments and a 1-process trace. selfcheck passes both samples.
