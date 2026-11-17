@@ -137,6 +137,8 @@ public class TraceRunner {
     static String answer(String[] q) {
         if (q[0].equals("rel"))
             return rel(find(q[1]), find(q[2]));
+        if (q[0].equals("order"))
+            return order();
         System.err.println("query not supported: " + String.join(" ", q));
         return null;
     }
@@ -154,6 +156,20 @@ public class TraceRunner {
         if (lessEq(b.v, a.v))
             return "<-";
         return "||";
+    }
+
+    static String order() {
+        List<State> all = new ArrayList<>();
+        for (List<State> list : states)
+            all.addAll(list);
+        all.sort((s, t) -> s.l != t.l ? s.l - t.l : s.p - t.p);
+        StringBuilder sb = new StringBuilder();
+        for (State s : all) {
+            if (sb.length() > 0)
+                sb.append(' ');
+            sb.append(s.name());
+        }
+        return sb.toString();
     }
 
     static boolean lessEq(int[] x, int[] y) {
